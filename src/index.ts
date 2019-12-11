@@ -52,18 +52,13 @@ export default class SimpleSignEngine {
       return Promise.resolve(this.cryptoClient.sign(privateKey, data));
     } else {
       // Fetch the key from ASM and generate the sign. Cache the key if said so
-      return this.asmClient
-        .getSecret({ SecretId: secretId })
-        .then((key: string) => {
-          // If the key should be cached, save it
-          if (shouldCache) {
-            this.keyMap.set(secretId, key);
-          }
-          return Promise.resolve(this.cryptoClient.sign(key, data));
-        })
-        .catch((err) => {
-          return Promise.reject(err);
-        });
+      return this.asmClient.getSecret({ SecretId: secretId }).then((key: string) => {
+        // If the key should be cached, save it
+        if (shouldCache) {
+          this.keyMap.set(secretId, key);
+        }
+        return Promise.resolve(this.cryptoClient.sign(key, data));
+      });
     }
   }
 
@@ -84,7 +79,7 @@ export default class SimpleSignEngine {
    * @returns {Promise<boolean>} Promise for the result of the verification as either true (passed)
    * or false (failed)
    */
-  public async verifySign(
+  public verifySign(
     signature: string,
     data: string | Buffer,
     secretId: string,
@@ -95,18 +90,13 @@ export default class SimpleSignEngine {
       return Promise.resolve(this.cryptoClient.verify(publicKey, data, signature));
     } else {
       // Fetch the key from ASM and verify the sign. Cache the key if the options say so
-      return this.asmClient
-        .getSecret({ SecretId: secretId })
-        .then((key: string) => {
-          // If the key should be cached, save it
-          if (shouldCache) {
-            this.keyMap.set(secretId, key);
-          }
-          return Promise.resolve(this.cryptoClient.verify(key, data, signature));
-        })
-        .catch((err) => {
-          return Promise.reject(err);
-        });
+      return this.asmClient.getSecret({ SecretId: secretId }).then((key: string) => {
+        // If the key should be cached, save it
+        if (shouldCache) {
+          this.keyMap.set(secretId, key);
+        }
+        return Promise.resolve(this.cryptoClient.verify(key, data, signature));
+      });
     }
   }
 }
