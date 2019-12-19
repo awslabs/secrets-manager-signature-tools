@@ -20,38 +20,31 @@ describe('AWS Secrets Manager client tests', function() {
     const result = await asmClientInstance.getSecret(mockASMSecretOpts);
 
     expect(result).toEqual(mockSignature);
-    expect(mockedASM.prototype.getSecretValue).toHaveBeenCalledWith(
-      mockASMSecretOpts,
-      expect.any(Function)
-    );
+    expect(mockedASM.prototype.getSecretValue).toHaveBeenCalledWith(mockASMSecretOpts);
   });
 
   it('should throw error if it fails to fetch secret from AWS Secrets Manager', async function() {
     mockedASM = mockASM('some-error', null);
     const asmClientInstance = getASMClientInstance();
 
-    const fetchCall = () => asmClientInstance.getSecret(mockASMSecretOpts);
-
-    expect(fetchCall()).rejects.toEqual(
-      'An error occurred while fetching key from ASM:' + ' some-error'
-    );
-    expect(mockedASM.prototype.getSecretValue).toBeCalledWith(
-      mockASMSecretOpts,
-      expect.any(Function)
-    );
+    try {
+      await asmClientInstance.getSecret(mockASMSecretOpts);
+    } catch (err) {
+      expect(err).toEqual('some-error');
+      expect(mockedASM.prototype.getSecretValue).toHaveBeenCalledWith(mockASMSecretOpts);
+    }
   });
 
   it('should throw error if empty secret is returned from AWS Secrets Manager', async function() {
     mockedASM = mockASM(null, {});
     const asmClientInstance = getASMClientInstance();
 
-    const fetchCall = () => asmClientInstance.getSecret(mockASMSecretOpts);
-
-    expect(fetchCall()).rejects.toEqual('No key data received from AWS Secrets Manager');
-    expect(mockedASM.prototype.getSecretValue).toBeCalledWith(
-      mockASMSecretOpts,
-      expect.any(Function)
-    );
+    try {
+      await asmClientInstance.getSecret(mockASMSecretOpts);
+    } catch (err) {
+      expect(err.message).toEqual('No data received from AWS Secrets Manager');
+      expect(mockedASM.prototype.getSecretValue).toHaveBeenCalledWith(mockASMSecretOpts);
+    }
   });
 
   function getASMClientInstance() {

@@ -31,18 +31,13 @@ class SecretsManager {
    *
    * @returns {Promise<string>} Promise for the secret in plaintext string
    */
-  public getSecret(opts: ASM.Types.GetSecretValueRequest): Promise<string> {
-    return new Promise<string>((resolve, reject) => {
-      this.asmClient.getSecretValue(opts, function(err, data) {
-        if (err) {
-          reject(`An error occurred while fetching key from ASM: ${err}`);
-        } else if (data && data.SecretString) {
-          resolve(data.SecretString);
-        } else {
-          reject('No key data received from AWS Secrets Manager');
-        }
-      });
-    });
+  public async getSecret(opts: ASM.Types.GetSecretValueRequest): Promise<string> {
+    const data = await this.asmClient.getSecretValue(opts).promise();
+    if (data && data.SecretString) {
+      return data.SecretString;
+    }
+
+    throw new Error('No data received from AWS Secrets Manager');
   }
 }
 

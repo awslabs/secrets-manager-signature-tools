@@ -45,7 +45,7 @@ export const config: SimpleSignEngineConfig = {
 };
 ```
 
-Then, you can consumer this config to drive a sign engine and use it:
+Then, you can consume this config to drive a sign engine and use it:
 
 ```typescript
 // simple-sign-engine.ts

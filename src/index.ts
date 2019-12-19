@@ -46,19 +46,22 @@ export default class SimpleSignEngine {
    *
    * @returns {Promise<string>} Promise for the signature as Base-64 encoded string
    */
-  public getSign(data: string | Buffer, secretId: string, shouldCache = false): Promise<string> {
+  public async getSign(
+    data: string | Buffer,
+    secretId: string,
+    shouldCache = false
+  ): Promise<string> {
     const privateKey = this.keyMap.get(secretId);
     if (privateKey) {
-      return Promise.resolve(this.cryptoClient.sign(privateKey, data));
+      return this.cryptoClient.sign(privateKey, data);
     } else {
       // Fetch the key from ASM and generate the sign. Cache the key if said so
-      return this.asmClient.getSecret({ SecretId: secretId }).then((key: string) => {
-        // If the key should be cached, save it
-        if (shouldCache) {
-          this.keyMap.set(secretId, key);
-        }
-        return Promise.resolve(this.cryptoClient.sign(key, data));
-      });
+      const key = await this.asmClient.getSecret({ SecretId: secretId });
+      if (shouldCache) {
+        this.keyMap.set(secretId, key);
+      }
+
+      return this.cryptoClient.sign(key, data);
     }
   }
 
@@ -79,7 +82,7 @@ export default class SimpleSignEngine {
    * @returns {Promise<boolean>} Promise for the result of the verification as either true (passed)
    * or false (failed)
    */
-  public verifySign(
+  public async verifySign(
     signature: string,
     data: string | Buffer,
     secretId: string,
@@ -87,16 +90,15 @@ export default class SimpleSignEngine {
   ): Promise<boolean> {
     const publicKey = this.keyMap.get(secretId);
     if (publicKey) {
-      return Promise.resolve(this.cryptoClient.verify(publicKey, data, signature));
+      return this.cryptoClient.verify(publicKey, data, signature);
     } else {
       // Fetch the key from ASM and verify the sign. Cache the key if the options say so
-      return this.asmClient.getSecret({ SecretId: secretId }).then((key: string) => {
-        // If the key should be cached, save it
-        if (shouldCache) {
-          this.keyMap.set(secretId, key);
-        }
-        return Promise.resolve(this.cryptoClient.verify(key, data, signature));
-      });
+      const key = await this.asmClient.getSecret({ SecretId: secretId });
+      if (shouldCache) {
+        this.keyMap.set(secretId, key);
+      }
+
+      return this.cryptoClient.verify(key, data, signature);
     }
   }
 }

@@ -4,15 +4,17 @@ export function mockASM(getSecretErr: any = null, getSecretRes: any = null) {
   jest.mock('aws-sdk');
   const mockAWS = require('aws-sdk');
 
-  mockAWS.SecretsManager.prototype.getSecretValue = jest.fn(
-    (_opts: any, cb: (err: any, data: any) => void) => {
-      if (getSecretErr) {
-        cb(getSecretErr, null);
-      } else {
-        cb(null, getSecretRes);
+  mockAWS.SecretsManager.prototype.getSecretValue = jest.fn((_opts: any) => {
+    return {
+      promise: () => {
+        if (getSecretErr) {
+          return Promise.reject(getSecretErr);
+        }
+
+        return Promise.resolve(getSecretRes);
       }
-    }
-  );
+    };
+  });
 
   return mockAWS.SecretsManager;
 }
@@ -87,16 +89,6 @@ function getPromiseResultOrErrorFn(shouldThrowError: boolean, result?: any) {
       return Promise.reject('some-error');
     } else {
       return Promise.resolve(result);
-    }
-  };
-}
-
-function getResultOrErrorFn(shouldThrowError: boolean, result?: any) {
-  return () => {
-    if (shouldThrowError) {
-      return new Error('some-error');
-    } else {
-      return result;
     }
   };
 }
