@@ -1,6 +1,6 @@
 {
   "name": "secrets-manager-signature-tools",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Utility to use secrets from AWS Secrets Manager for cryptographic signature generation and verification",
   "repository": {
     "type": "git",

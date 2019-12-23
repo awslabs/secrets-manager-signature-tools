@@ -49,7 +49,7 @@ Then, you can consume this config to drive a sign engine and use it:
 
 ```typescript
 // simple-sign-engine.ts
-import { config } from 'signature-engine-config';
+import { config } from './signature-engine-config';
 import SimpleSignEngine from 'secrets-manager-signature-tools';
 
 const signEngine = new SimpleSignEngine(config);
