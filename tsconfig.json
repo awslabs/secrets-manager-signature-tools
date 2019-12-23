@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "lib": ["es6"],
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "strictFunctionTypes": true,
+    "strictNullChecks": true,
+    "esModuleInterop": true,
+    "outDir": "dist",
+    "experimentalDecorators": true,
+    "declaration": true
+  },
+  "include": ["src/**/*", "__test__/**/*"],
+  "exclude": ["__test__/**/*", "dist", "node_modules/**/*"]
+}
