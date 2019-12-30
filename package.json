@@ -1,33 +1,28 @@
 {
   "name": "secrets-manager-signature-tools",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Utility to use secrets from AWS Secrets Manager for cryptographic signature generation and verification",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/awslabs/secrets-manager-signature-tools.git"
   },
-  "license": "Apache 2.0",
+  "license": "Apache-2.0",
   "author": "dalmia.anmol+github@gmail.com",
+  "homepage": "https://github.com/awslabs/secrets-manager-signature-tools",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "engines": {
     "node": ">=8.0.0"
   },
+  "files": ["dist"],
   "scripts": {
     "build": "tsc -p .",
     "clean": "rm -rf dist ; rm -rf coverage",
     "coverage": "jest --coverage",
-    "create": "npm-run-all build coverage lint",
+    "create": "npm-run-all coverage build lint",
     "lint": "eslint 'src/**/*'",
     "lint:fix": "eslint --fix 'src/**/*'",
-    "precommit": "npm --no-git-tag-version version patch && git add package.json && git add package-lock.json",
     "test": "jest"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "npm run precommit && lint-staged",
-      "prepare-commit-msg": "git-commit-template"
-    }
   },
   "lint-staged": {
     "**/*.{js,jsx,ts,tsx,json,css,md}": ["prettier --write", "git add"],

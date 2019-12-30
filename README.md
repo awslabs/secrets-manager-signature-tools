@@ -1,7 +1,5 @@
 ## secrets-manager-signature-tools
 
-[![codecov.io Code Coverage](https://img.shields.io/codecov/c/github/awslabs/secrets-manager-signature-tools.svg?maxAge=2592000)](https://codecov.io/github/awslabs/secrets-manager-signature-tools?branch=master)
-
 A lightweight wrapper over NodeJS native crypto library for content signing and verification. This library interfaces with AWS Secrets Manager (ASM) to fetch stored secrets for the signature processes to reduce boilerplate secret management in your code.
 
 You can use this library for code signing with AWS Secrets Manager in your JavaScript/TypeScript applications. For TS, you do not need separate typings package to be installed; you'd find the typings as part of this package itself.
